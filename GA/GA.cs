@@ -8,31 +8,57 @@ namespace GA
 {
     public class GA
     {
+        /// <summary>
+        /// Шанс мутации
+        /// </summary>
         public double MutationRate { get; set; }
+        /// <summary>
+        /// Шанг кроссинговера
+        /// </summary>
         public double CrossoverRate { get; set; }
+        /// <summary>
+        /// Размер популяции
+        /// </summary>
         public int PopulationSize { get; set; }
+        /// <summary>
+        /// Размер поколения
+        /// </summary>
         public int GenerationSize { get; set; }
+        /// <summary>
+        /// Размер генома
+        /// </summary>
         public int GenomeSize { get; set; }
         public double TotalFitness { get; set; }
+        /// <summary>
+        /// Файл для сохранения
+        /// </summary>
         public string FitnessFile { get; set; }
+        /// <summary>
+        /// Функция пригодности
+        /// </summary>
         public Func<double[], double> FitnessFunction { get; set; }
 
-        private Random _rnd;
-        private List<Gen> _thisGeneration;
-        private List<Gen> _nextGeneration;
-        private List<double> _fittnessTable;
+        private readonly Random _rnd;
+        private readonly List<Gen> _thisGeneration;
+        private readonly List<Gen> _nextGeneration;
+        private readonly List<double> _fittnessTable;
+
         /// <summary>
         /// Базовый конструктор с заданными параметрами
         /// </summary>
-        public GA()
-        {
-            MutationRate = 0.05;
-            CrossoverRate = 0.8;
-            PopulationSize = 20;
-            GenerationSize = 100;
-            Initialize();
-        }
+        public GA() : this(
+            mutationRate: 0.05,
+            crossoverRate: 0.8,
+            populationSize: 20,
+            generationSize: 100,
+            genomeSize: 2,
+            fitnessFile: null,
+            fitnessFunction: null)
+        { }
 
+        /// <summary>
+        /// Создание генетического алгоритма с заданными параметрами
+        /// </summary>
         /// <param name="mutationRate">Скорость мутации</param>
         /// <param name="crossoverRate">Кроссинговер</param>
         /// <param name="populationSize">Размер популяции</param>
@@ -55,11 +81,7 @@ namespace GA
             GenomeSize = genomeSize;
             FitnessFile = fitnessFile;
             FitnessFunction = fitnessFunction;
-            Initialize();
-        }
 
-        private void Initialize()
-        {
             _rnd = new Random();
             _thisGeneration = new List<Gen>();
             _nextGeneration = new List<Gen>();
@@ -71,6 +93,10 @@ namespace GA
         /// </summary>
         public void Go()
         {
+            if (MutationRate < 0 || MutationRate > 1)
+                throw new ArgumentException("Шанс мутации может быть от 0 до 1");
+            if (CrossoverRate < 0 || CrossoverRate > 1)
+                throw new ArgumentException("Шанс кроссинговера может быть от 0 до 1");
             if (FitnessFunction == null)
                 throw new ArgumentNullException(nameof(FitnessFunction));
             if (GenomeSize <= 0)
@@ -146,7 +172,6 @@ namespace GA
         /// После ранжирования всех генов по пригодности используется рулеточный отбор
         /// Это дает большую вероятность отбора, тем кто обладает меньшей приспособленностью
         /// </summary>
-        /// <returns></returns>
         private int RouletteSelection()
         {
             var randomFitness = _rnd.NextDouble() * TotalFitness;
@@ -188,7 +213,6 @@ namespace GA
                 TotalFitness += g.Fitness;
             }
             _thisGeneration.Sort(new GenComparer());
-
             double fitness = 0;
             _fittnessTable.Clear();
             for (int i = 0; i < PopulationSize; i++)
@@ -198,16 +222,29 @@ namespace GA
             }
         }
 
+        /// <summary>
+        /// Получение лучшего гена
+        /// </summary>
+        /// <returns>Лучший ген</returns>
         public Gen GetBestGen()
         {
             return _thisGeneration.Last();
         }
 
+        /// <summary>
+        /// Получения худшего гена
+        /// </summary>
+        /// <returns>Худший ген</returns>
         public Gen GetWorstGen()
         {
             return _thisGeneration.First();
         }
 
+        /// <summary>
+        /// Получение гена по индексу
+        /// </summary>
+        /// <param name="n">Индекс гена</param>
+        /// <returns></returns>
         public Gen GetNthGenome(int n)
         {
             return _thisGeneration[n];

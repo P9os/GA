@@ -1,5 +1,4 @@
-﻿using GA;
-using System;
+﻿using System;
 
 namespace Four
 {
@@ -11,15 +10,15 @@ namespace Four
                 crossoverRate: 0.8,
                 populationSize: 100,
                 generationSize: 20,
-                genomeSize: 5,
+                genomeSize: 1,
                 fitnessFile: "F.txt",
                 fitnessFunction: (doubles) =>
             {
                 double x = doubles[0];
-                double y = doubles[1];
+                //double y = doubles[1];
 
                 double n = 9;   
-                double f1 = Math.Pow(15 * x * y * (1 - x) * (1 - y) * Math.Sin(n * Math.PI * x) * Math.Sin(n * Math.PI * y), 2);
+                //double f1 = Math.Pow(15 * x * y * (1 - x) * (1 - y) * Math.Sin(n * Math.PI * x) *Math.Sin(n * Math.PI * y), 2);
                 var f = Math.Sin(2 * x) / Math.Pow(x, 2);
                 return f;
             });

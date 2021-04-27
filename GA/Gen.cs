@@ -4,15 +4,15 @@ namespace GA
 {
     public class Gen
     {
-        public int Lenght { get; set; }
-        public double[] Genes { get; set; }
-        public double Fitness { get; set; }
+        public int Lenght { get; private set; }
+        public double[] Genes { get; internal set; }
+        public double Fitness { get; internal set; }
 
         internal static double MutationRate { get; set; }
 
         private readonly Random _rnd;
 
-        public Gen(int lenght, bool createGenes = true)
+        internal Gen(int lenght, bool createGenes = true)
         {
             _rnd = new Random();
             Lenght = lenght;
@@ -33,7 +33,7 @@ namespace GA
             }
         }
 
-        public void Crossover(Gen genome, out Gen child1, out Gen child2)
+        internal void Crossover(Gen genome, out Gen child1, out Gen child2)
         {
             var pos = (int)(_rnd.NextDouble() * Lenght);
             child1 = new Gen(Lenght, false);
@@ -53,13 +53,13 @@ namespace GA
             }
         }
 
-        public void Mutate()
+        internal void Mutate()
         {
             for (int i = 0; i < Lenght; i++)
             {
                 if (_rnd.NextDouble() < MutationRate)
                 {
-                    Genes[i] += (_rnd.NextDouble(-20, -3.1));
+                    Genes[i] += (_rnd.NextDouble());
                 }
             }
         }
