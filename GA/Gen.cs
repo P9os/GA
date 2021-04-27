@@ -10,7 +10,7 @@ namespace GA
 
         internal static double MutationRate { get; set; }
 
-        private Random _rnd;
+        private readonly Random _rnd;
 
         public Gen(int lenght, bool createGenes = true)
         {

@@ -18,7 +18,6 @@ namespace GA
         public Func<double[], double> FitnessFunction { get; set; }
 
         private Random _rnd;
-        private bool _elitism;
         private List<Gen> _thisGeneration;
         private List<Gen> _nextGeneration;
         private List<double> _fittnessTable;
@@ -31,7 +30,6 @@ namespace GA
             CrossoverRate = 0.8;
             PopulationSize = 20;
             GenerationSize = 100;
-            _elitism = false;
             Initialize();
         }
 
@@ -57,7 +55,6 @@ namespace GA
             GenomeSize = genomeSize;
             FitnessFile = fitnessFile;
             FitnessFunction = fitnessFunction;
-            _elitism = false;
             Initialize();
         }
 
@@ -112,10 +109,6 @@ namespace GA
         {
             _nextGeneration.Clear();
             Gen g = null;
-            if (_elitism)
-            {
-                g = _thisGeneration.Last();
-            }
 
             for (int i = 0; i < PopulationSize; i += 2)
             {
@@ -137,7 +130,7 @@ namespace GA
                 _nextGeneration.Add(child1);
                 _nextGeneration.Add(child2);
             }
-            if (_elitism && g != null)
+            if (g != null)
             {
                 _nextGeneration[0] = g;
             }
