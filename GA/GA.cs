@@ -212,7 +212,7 @@ namespace GA
                 g.Fitness = FitnessFunction(g.Genes);
                 TotalFitness += g.Fitness;
             }
-            _thisGeneration.Sort(new GenComparer());
+            _thisGeneration.OrderBy(x => x.Fitness);
             double fitness = 0;
             _fittnessTable.Clear();
             for (int i = 0; i < PopulationSize; i++)

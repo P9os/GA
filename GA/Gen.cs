@@ -29,7 +29,7 @@ namespace GA
         {
             for (int i = 0; i < Lenght; i++)
             {
-                Genes[i] = _rnd.NextDouble();
+                Genes[i] = _rnd.NextDouble(-20, -3.1);
             }
         }
 
