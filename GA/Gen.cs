@@ -12,11 +12,15 @@ namespace GA
 
         private readonly Random _rnd;
 
-        internal Gen(int lenght, bool createGenes = true)
+        private (double a, double b) searchArea;
+
+        internal Gen(int lenght, double a, double b, bool createGenes = true)
         {
             _rnd = new Random();
             Lenght = lenght;
             Genes = new double[lenght];
+            searchArea.a = a;
+            searchArea.b = b;
             if (createGenes)
             {
                 CreateGenes();
@@ -29,15 +33,15 @@ namespace GA
         {
             for (int i = 0; i < Lenght; i++)
             {
-                Genes[i] = _rnd.NextDouble(-20, -3.1);
+                Genes[i] = _rnd.NextDouble(searchArea.a, searchArea.b);
             }
         }
 
         internal void Crossover(Gen genome, out Gen child1, out Gen child2)
         {
             var pos = (int)(_rnd.NextDouble() * Lenght);
-            child1 = new Gen(Lenght, false);
-            child2 = new Gen(Lenght, false);
+            child1 = new Gen(Lenght, searchArea.a, searchArea.b, false);
+            child2 = new Gen(Lenght, searchArea.a, searchArea.b, false);
             for (int i = 0; i < Lenght; i++)
             {
                 if (i < pos)

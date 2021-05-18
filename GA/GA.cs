@@ -37,9 +37,17 @@ namespace GA
         /// Функция пригодности
         /// </summary>
         public Func<double[], double> FitnessFunction { get; set; }
+        /// <summary>
+        /// Начало поисковой области
+        /// </summary>
+        public double A { get; set; }
+        /// <summary>
+        /// Конец поисковой области
+        /// </summary>
+        public double B { get; set; }
 
         private readonly Random _rnd;
-        private readonly List<Gen> _thisGeneration;
+        private List<Gen> _thisGeneration;
         private readonly List<Gen> _nextGeneration;
         private readonly List<double> _fittnessTable;
 
@@ -53,6 +61,8 @@ namespace GA
             generationSize: 100,
             genomeSize: 2,
             fitnessFile: null,
+            -5,
+            5,
             fitnessFunction: null)
         { }
 
@@ -66,12 +76,16 @@ namespace GA
         /// <param name="genomeSize">Размер генома</param>
         /// <param name="fitnessFile">Файл для записи</param>
         /// <param name="fitnessFunction">Функция пригодности</param>
+        /// <param name="a">Начало поисковой области</param>
+        /// <param name="b">Конец поисковой области</param>
         public GA(double mutationRate,
             double crossoverRate,
             int populationSize,
             int generationSize,
             int genomeSize,
             string fitnessFile,
+            double a,
+            double b,
             Func<double[], double> fitnessFunction)
         {
             MutationRate = mutationRate;
@@ -81,6 +95,8 @@ namespace GA
             GenomeSize = genomeSize;
             FitnessFile = fitnessFile;
             FitnessFunction = fitnessFunction;
+            A = a;
+            B = b;
 
             _rnd = new Random();
             _thisGeneration = new List<Gen>();
@@ -124,7 +140,7 @@ namespace GA
         {
             for (int i = 0; i < PopulationSize; i++)
             {
-                _thisGeneration.Add(new Gen(GenomeSize));
+                _thisGeneration.Add(new Gen(GenomeSize, A, B));
             }
         }
 
@@ -212,7 +228,7 @@ namespace GA
                 g.Fitness = FitnessFunction(g.Genes);
                 TotalFitness += g.Fitness;
             }
-            _thisGeneration.OrderBy(x => x.Fitness);
+            _thisGeneration = _thisGeneration.OrderBy(x => x.Fitness).ToList();
             double fitness = 0;
             _fittnessTable.Clear();
             for (int i = 0; i < PopulationSize; i++)

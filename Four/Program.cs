@@ -12,6 +12,8 @@ namespace Four
                 generationSize: 20,
                 genomeSize: 1,
                 fitnessFile: "F.txt",
+                -20,
+                -3.1,
                 fitnessFunction: (doubles) =>
             {
                 double x = doubles[0];
