@@ -6,25 +6,28 @@ namespace Four
     {
         static void Main(string[] args)
         {
-            var ga = new GA.GA(mutationRate: 0.05,
-                crossoverRate: 0.8,
-                populationSize: 100,
-                generationSize: 20,
-                genomeSize: 1,
-                fitnessFile: "F.txt",
-                -20,
-                -3.1,
-                fitnessFunction: (doubles) =>
+            for (double i = 0.4; i <= 1; i += 0.05)
             {
-                double x = doubles[0];
-                return Math.Sin(2 * x) / Math.Pow(x, 2);
-            });
-            ga.Go();
-
-            var bestGen = ga.GetBestGen();
-            Console.Out.WriteLine($"Best: {bestGen.Fitness}");
-            var worstGen = ga.GetWorstGen();
-            Console.Out.WriteLine($"Worst: {worstGen.Fitness}");
+                var x = 0;
+                var g = new GA.GA(
+                    mutationRate: 0.05,
+                    crossoverRate: i,
+                    populationSize: 100,
+                    generationSize: 20,
+                    genomeSize: 1,
+                    fitnessFile: $"F({x}).txt",
+                    -20,
+                    -3.1,
+                    d =>
+                    {
+                        double x = d[0];
+                        return Math.Sin(2 * x) / Math.Pow(x, 2);
+                    });
+                g.Go();
+                x++;
+            }
+            Console.Out.WriteLine("Done");
+            Console.ReadKey();
         }
     }
 }
